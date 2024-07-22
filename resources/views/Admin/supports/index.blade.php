@@ -24,3 +24,6 @@
     </tbody>
 </table>
 
+<x-pagination
+    :paginator="$supports"
+    :appends="$filters" />
