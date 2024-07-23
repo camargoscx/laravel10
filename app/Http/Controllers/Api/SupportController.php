@@ -21,9 +21,26 @@ class SupportController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        // $supports = Support::paginate();
+        $supports = $this->service->paginate(
+            page: $request->get('page', 1),
+            totalPerPage: $request->get('per_page', 1),
+            filter: $request->filter
+        );
+
+        return SupportResource::collection($supports->items())
+                                ->additional([
+                                    'meta' => [
+                                        'total' => $supports->total(),
+                                        'is_First_Page' => $supports->isFirstPage(),
+                                        'is_Last_Page' => $supports->isLastPage(),
+                                        'current_page' => $supports->currentPage(),
+                                        'next_page' => $supports->getNumberNextPage(),
+                                        'previous_page' => $supports->getNumberPreviousPage(),
+                                    ]
+                                ]);
     }
 
     /**
